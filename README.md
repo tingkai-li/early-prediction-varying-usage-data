@@ -1,2 +1,2 @@
 # early-prediction-HBM
-The code repository for "Predicting Battery Lifetime Under Varying Usage Conditions from Early Aging Data"
+This is the code repository for the paper "Predicting Battery Lifetime Under Varying Usage Conditions from Early Aging Data", submitted to Cell Reports Physical Science.
