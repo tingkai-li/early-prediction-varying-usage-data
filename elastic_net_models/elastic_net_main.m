@@ -1,4 +1,4 @@
- %% Initialization
+%% Initialization
 clc; clear; close all;
 warning off
 addpath('../feature_extraction/')
@@ -11,6 +11,7 @@ test_table_out = readtable('test_out.csv');
 Y_train = log(train_table.Lifetime);
 Y_test_in = log(test_table_in.Lifetime);
 Y_test_out = log(test_table_out.Lifetime);
+
 %% Dummy model
 [~, train_error_dummy,  true_pred_train] = fit_dummy(Y_train, Y_train, true);
 [~, test_error_dummy_in,  true_pred_test_in] = fit_dummy(Y_train, Y_test_in, true);

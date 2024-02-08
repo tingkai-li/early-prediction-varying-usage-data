@@ -1,6 +1,5 @@
 function [training_error, true_pred_train,test_error, true_pred_test_1,true_pred_test_2, B, FitInfo] = fit_elastic_fixed_train_2_test(X_train, Y_train, X_test_1, Y_test_1,X_test_2, Y_test_2, n_sim, cv_, standardize_X, min_max_X, log_target, min_MSE_selection)
 
-
 % Lay out the default values for the method
 arguments
     X_train (:,:) {double}
@@ -77,7 +76,7 @@ if log_target == true
     y_true_train = exp(Y_train);
     true_pred_train = [y_true_train y_pred_train];
 
-    training_error(1,1) = 1 - sum((true_pred_train(:,1)-true_pred_train(:,2)).^2)/sum((true_pred_train(:,1)-mean(true_pred_train(:,1))).^2); % R2 score
+    training_error(1,1) = mean(abs(true_pred_train(:,1)-true_pred_train(:,2))); % MAE
     training_error(1,2) = mean(abs((true_pred_train(:,1)-true_pred_train(:,2))./true_pred_train(:,1)))*100; % MAPE
     training_error(1,3) = sqrt(mean((true_pred_train(:,1)-true_pred_train(:,2)).^2)); % RMSE
     training_error(1,4) = median(abs(true_pred_train(:,1)-true_pred_train(:,2))); % MDAE
@@ -89,7 +88,7 @@ if log_target == true
     y_true_test = exp(Y_test_1);
     true_pred_test_1 = [y_true_test y_pred_test];
 
-    test_error(1,1) = 1 - sum((true_pred_test_1(:,1)-true_pred_test_1(:,2)).^2)/sum((true_pred_test_1(:,1)-mean(true_pred_test_1(:,1))).^2); % R2 score
+    test_error(1,1) = mean(abs(true_pred_test_1(:,1)-true_pred_test_1(:,2))); % MAE
     test_error(1,2) = mean(abs((true_pred_test_1(:,1)-true_pred_test_1(:,2))./true_pred_test_1(:,1)))*100; % MAPE
     test_error(1,3) = sqrt(mean((true_pred_test_1(:,1)-true_pred_test_1(:,2)).^2)); % RMSE
     test_error(1,4) = median(abs(true_pred_test_1(:,1)-true_pred_test_1(:,2))); % MDAE
@@ -100,7 +99,7 @@ if log_target == true
     y_true_test = exp(Y_test_2);
     true_pred_test_2 = [y_true_test y_pred_test];
 
-    test_error(2,1) = 1 - sum((true_pred_test_2(:,1)-true_pred_test_2(:,2)).^2)/sum((true_pred_test_2(:,1)-mean(true_pred_test_2(:,1))).^2); % R2 score
+    test_error(2,1) = mean(abs(true_pred_test_2(:,1)-true_pred_test_2(:,2))); % MAE
     test_error(2,2) = mean(abs((true_pred_test_2(:,1)-true_pred_test_2(:,2))./true_pred_test_2(:,1)))*100; % MAPE
     test_error(2,3) = sqrt(mean((true_pred_test_2(:,1)-true_pred_test_2(:,2)).^2)); % RMSE
     test_error(2,4) = median(abs(true_pred_test_2(:,1)-true_pred_test_2(:,2))); % MDAE
@@ -111,7 +110,7 @@ elseif log_target == false
     % Calculate training error
     true_pred_train = [Y_train y_hat_train];
 
-    training_error(1,1) = 1 - sum((true_pred_train(:,1)-true_pred_train(:,2)).^2)/sum((true_pred_train(:,1)-mean(true_pred_train(:,1))).^2); % R2 score
+    training_error(1,1) = mean(abs(true_pred_train(:,1)-true_pred_train(:,2))); % MAE
     training_error(1,2) = mean(abs((true_pred_train(:,1)-true_pred_train(:,2))./true_pred_train(:,1)))*100; % MAPE
     training_error(1,3) = sqrt(mean((true_pred_train(:,1)-true_pred_train(:,2)).^2)); % RMSE
     training_error(1,4) = median(abs(true_pred_train(:,1)-true_pred_train(:,2))); % MDAE
@@ -121,7 +120,7 @@ elseif log_target == false
     % Calculate test error
     true_pred_test_1 = [Y_test_1 y_hat_test_1];
 
-    test_error(1,1) = 1 - sum((true_pred_test_1(:,1)-true_pred_test_1(:,2)).^2)/sum((true_pred_test_1(:,1)-mean(true_pred_test_1(:,1))).^2); % R2 score
+    test_error(1,1) = mean(abs(true_pred_test_1(:,1)-true_pred_test_1(:,2))); % MAE
     test_error(1,2) = mean(abs((true_pred_test_1(:,1)-true_pred_test_1(:,2))./true_pred_test_1(:,1)))*100; % MAPE
     test_error(1,3) = sqrt(mean((true_pred_test_1(:,1)-true_pred_test_1(:,2)).^2)); % RMSE
     test_error(1,4) = median(abs(true_pred_test_1(:,1)-true_pred_test_1(:,2))); % MDAE
@@ -130,7 +129,7 @@ elseif log_target == false
 
     true_pred_test_2 = [Y_test_2 y_hat_test_2];
 
-    test_error(2,1) = 1 - sum((true_pred_test_2(:,1)-true_pred_test_2(:,2)).^2)/sum((true_pred_test_2(:,1)-mean(true_pred_test_2(:,1))).^2); % R2 score
+    test_error(2,1) = mean(abs(true_pred_test_2(:,1)-true_pred_test_2(:,2))); % MAE
     test_error(2,2) = mean(abs((true_pred_test_2(:,1)-true_pred_test_2(:,2))./true_pred_test_2(:,1)))*100; % MAPE
     test_error(2,3) = sqrt(mean((true_pred_test_2(:,1)-true_pred_test_2(:,2)).^2)); % RMSE
     test_error(2,4) = median(abs(true_pred_test_2(:,1)-true_pred_test_2(:,2))); % MDAE
