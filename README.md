@@ -1,5 +1,7 @@
 # Early prediction of battery lifetime
-This is the code repository for the paper "Predicting Battery Lifetime Under Varying Usage Conditions from Early Aging Data" by Li, Zhou, et al., submitted to Cell Reports Physical Science. 
+This is the code repository for the paper "Predicting Battery Lifetime Under Varying Usage Conditions from Early Aging Data", submitted to Cell Reports Physical Science. 
+
+Authors: Tingkai Li, Zihao Zhou, Adam Thelen, David Howey, Chao Hu
 
 This repository contains codes for feature extraction and machine learning that generated results in this paper. 
 
