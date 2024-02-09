@@ -60,8 +60,9 @@ if __name__ == '__main__':
     # Cell in Release 2.0 (to determine the proper subfolder in released dataset)
     batch2 = ['G57C1','G57C2','G57C3','G57C4','G58C1', 'G26C3','G49C1','G49C2','G49C3','G49C4','G50C1','G50C3','G50C4'] 
     
-    # Dropbox folder
-    main_dir = r'C:\Users\til22008\Dropbox\Oxford-Iowa State collaboration on battery early life prediction\DataShare'
+    
+    ### Main directory for the dataset ### TO MODIFY
+    main_dir = ''
     # Directory of raw JSON files for RPT
     RPT_json_dir = main_dir+'/RPT_json/'
     # Directory of preprocessed (interpolated) QV curves
