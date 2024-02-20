@@ -109,12 +109,12 @@ def curve_difference_varying_window(cell, vlow, vhigh, vmin, vmax, vlength, star
 
 ### Define a function to extract features from dVdQ curves ###
 def DVA_capacity_features(cell, week1, week2, dvdq_curves, Q_int):
-    # We use an unofficial upper plot limit of 6.0 for the dVdQ curves
+    # We use an upper plot limit of 6.0 for the dVdQ curves
     y_lim = 6
   
     g = int(cell[1:-2])  # Group number
     if g < 20:
-        # Shortening the curves makes it easier to managel
+        # Shortening the curves makes it easier to locate peaks
         idxs1_ = (Q_int[cell][week1][:-1] <= 0.28) * (-dvdq_curves[cell][week1] <= y_lim) * (dvdq_curves[cell][week1] <= 0)
         idxs2_ = (Q_int[cell][week2][:-1] <= 0.28) * (-dvdq_curves[cell][week2] <= y_lim) * (dvdq_curves[cell][week2] <= 0)
         q1_ = Q_int[cell][week1][:-1][idxs1_]
@@ -143,7 +143,6 @@ def DVA_capacity_features(cell, week1, week2, dvdq_curves, Q_int):
         # debug for merged final peak in dvdq1_
         if q1_[max_idxs1[-1]] < 0.19:
             min_ind = argrelextrema(dvdq1_[max_idxs1[1]:], np.less, axis=0, order=10)[0]
-            # min_ind = all_min_ind[np.where(all_min_ind > max_idxs2[1])][0]
             diff_dvdq1 = np.diff(dvdq1_[max_idxs1[1]:])
             zero_diff_ind = np.where(np.logical_and(diff_dvdq1<0.006,diff_dvdq1>-0.006))[0]
 
@@ -163,7 +162,6 @@ def DVA_capacity_features(cell, week1, week2, dvdq_curves, Q_int):
         # debug for merged final peak in dvdq2_
         if q2_[max_idxs2[-1]] < 0.19:
             min_ind = argrelextrema(dvdq2_[max_idxs2[1]:], np.less, axis=0, order=10)[0]
-            # min_ind = all_min_ind[np.where(all_min_ind > max_idxs2[1])][0]
             diff_dvdq2 = np.diff(dvdq2_[max_idxs2[1]:])
             zero_diff_ind = np.where(np.logical_and(diff_dvdq2<0.006,diff_dvdq2>-0.006))[0]
 
@@ -182,8 +180,7 @@ def DVA_capacity_features(cell, week1, week2, dvdq_curves, Q_int):
     else:
         # Shortening the curves makes it easier to locate peaks
         idxs1_ = (Q_int[cell][week1][:-1] <= 0.28) * (-dvdq_curves[cell][week1] <= y_lim) * (dvdq_curves[cell][week1] <= 0)
-        # idxs2_ = (Q_int[cell][week2+1][:-1] <= 0.28) * (-dvdq_curves[cell][week2+1] <= y_lim) * (dvdq_curves[cell][week2+1] <= 0)
-        idxs2_ = (Q_int[cell][week2][:-1] <= 0.28) * (-dvdq_curves[cell][week2] <= y_lim) * (dvdq_curves[cell][week2] <= 0)
+        idxs2_ = (Q_int[cell][week2+1][:-1] <= 0.28) * (-dvdq_curves[cell][week2+1] <= y_lim) * (dvdq_curves[cell][week2+1] <= 0)
 
         q1_ = Q_int[cell][week1][:-1][idxs1_]
         q2_ = Q_int[cell][week2+1][:-1][idxs2_]
@@ -211,7 +208,6 @@ def DVA_capacity_features(cell, week1, week2, dvdq_curves, Q_int):
         # debug for merged final peak in dvdq1_
         if q1_[max_idxs1[-1]] < 0.19:
             min_ind = argrelextrema(dvdq1_[max_idxs1[1]:], np.less, axis=0, order=10)[0]
-            # min_ind = all_min_ind[np.where(all_min_ind > max_idxs2[1])][0]
             diff_dvdq1 = np.diff(dvdq1_[max_idxs1[1]:])
             zero_diff_ind = np.where(np.logical_and(diff_dvdq1<0.006,diff_dvdq1>-0.006))[0]
 
@@ -227,10 +223,10 @@ def DVA_capacity_features(cell, week1, week2, dvdq_curves, Q_int):
                 continue
             if dvdq2_[ind] > dvdq2_[QNE2_ind]:
                 QNE2_ind = ind
-
+                
+        # debug for merged final peak in dvdq2_
         if q2_[max_idxs2[-1]] < 0.19:
             min_ind = argrelextrema(dvdq2_[max_idxs2[1]:], np.less, axis=0, order=10)[0]
-            # min_ind = all_min_ind[np.where(all_min_ind > max_idxs2[1])][0]
             diff_dvdq2 = np.diff(dvdq2_[max_idxs2[1]:])
             zero_diff_ind = np.where(np.logical_and(diff_dvdq2<0.006,diff_dvdq2>-0.006))[0]
 
@@ -257,7 +253,6 @@ def charge_CV_feature(cell, RPT_dict, week_num):
             index = np.where(np.array(RPT_dict['QV_charge_C_5']['I'][week_num])<0.0495)[0][0]
             t_CV = (RPT_dict['QV_charge_C_5']['t'][week_num][-1] - RPT_dict['QV_charge_C_5']['t'][week_num][index])/np.timedelta64(1,'s')
         except:
-            print(cell)
             t_CV = np.nan
     else:
         try:
@@ -285,15 +280,17 @@ def capacity_features(RPT_dict, cell, end_week):
 
 ### Define a function to extract the initial capacity within a given voltage window ###
 def initial_Q_varying_window(cell, vlow, vhigh, vmin, vmax, vlength, interpolated_curve):
-    idx_1 =  np.where((np.linspace(3.0, 4.2, 1000) >= vlow))[0][0]
-    idx_2 =  np.where((np.linspace(3.0, 4.2, 1000) >= vhigh))[0][0]
+    idx_1 =  np.where((np.linspace(vmin, vmax, vlength) >= vlow))[0][0]
+    idx_2 =  np.where((np.linspace(vmin, vmax, vlength) >= vhigh))[0][0]
     return interpolated_curve[cell][0][idx_2]-interpolated_curve[cell][0][idx_1]
 
 
 
 if __name__ == '__main__':
-    # List of cells used in this paper
+    # List of cells used in this paper. Some cells from the dataset didn't 
+    # reach the EOL at the time when we finalized results for this paper 
     valid_cells = pd.read_csv('valid_cells_paper.csv').values.flatten().tolist()
+    
     # Cycling conditions of each group (without DoD) and empirical DoD values for each cell
     cycling_cond = pd.read_csv('cycling_conditions_wo_DoD.csv')
     empirical_DoD = pd.read_csv('empirical_DoD.csv')
@@ -327,8 +324,10 @@ if __name__ == '__main__':
     Q_initial = {}; Q_initial_low = {}; Q_initial_mid = {}; Q_initial_high = {}
     Q_fade = {}    
     
-    # 1000 equally spaced voltage points for deriving derivatives
-    V_interpolate = np.linspace(3,4.18,1000) # For consistency with the interpolation
+    # 1000 equally spaced voltage points for deriving derivatives. This is for 
+    # consistency with the interpolation during the preprocessing. When we extract
+    # features, we use the full voltage range (3.0V to 4.2V).
+    V_interpolate = np.linspace(3,4.18,1000)  
     
     for i,cell in enumerate(valid_cells):
         if cell in batch2:
